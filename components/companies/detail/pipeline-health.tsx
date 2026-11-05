@@ -1,4 +1,7 @@
+"use client";
+
 import SegmentBar from "@/components/_common/segment-bar";
+import { useI18n } from "@/components/_common/preferences-provider";
 import type { Company } from "@/data/companies";
 import { companyHealth } from "@/lib/companies";
 
@@ -7,11 +10,24 @@ type PipelineHealthProps = {
 };
 
 export default function PipelineHealth({ company }: PipelineHealthProps) {
+  const { t } = useI18n();
   const health = companyHealth(company);
   const stages = [
-    { label: "Discovery", value: health.discovery, tone: "danger" as const },
-    { label: "Evaluation", value: health.evaluation, tone: "warning" as const },
-    { label: "Procurement", value: health.procurement, tone: "success" as const },
+    {
+      label: t.detail.pipelineHealth.discovery,
+      value: health.discovery,
+      tone: "danger" as const,
+    },
+    {
+      label: t.detail.pipelineHealth.evaluation,
+      value: health.evaluation,
+      tone: "warning" as const,
+    },
+    {
+      label: t.detail.pipelineHealth.procurement,
+      value: health.procurement,
+      tone: "success" as const,
+    },
   ];
 
   return (
@@ -20,8 +36,8 @@ export default function PipelineHealth({ company }: PipelineHealthProps) {
         <span className="block text-[28px] leading-none font-semibold">
           {company.winProbability}%
         </span>
-        <span className="caption-style block text-soft">
-          Win probability across all open deals
+        <span className="caption-style text-soft block">
+          {t.detail.pipelineHealth.winProbability}
         </span>
       </div>
       <div className="flex flex-col gap-3">
@@ -35,9 +51,9 @@ export default function PipelineHealth({ company }: PipelineHealthProps) {
               percent={stage.value}
               segments={63}
               tone={stage.tone}
-              className="h-3 w-full border border-white/4 px-px"
+              className="border-foreground/4 h-3 w-full border px-px"
               segmentClassName="h-2"
-              trackClassName="bg-white/8"
+              trackClassName="bg-foreground/8"
             />
           </div>
         ))}

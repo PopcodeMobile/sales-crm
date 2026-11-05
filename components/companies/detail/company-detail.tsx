@@ -15,6 +15,7 @@ import {
   SheetHeader,
   SheetTitle,
 } from "@/components/_ui/sheet";
+import { useI18n } from "@/components/_common/preferences-provider";
 import FilterMenu from "@/components/_common/filter-menu";
 import DetailSection from "./detail-section";
 import PipelineHealth from "./pipeline-health";
@@ -32,9 +33,8 @@ import XIcon from "@/public/assets/images/companies/detail/x.svg";
 import MailIcon from "@/public/assets/images/companies/detail/mail-04.svg";
 import PhoneIcon from "@/public/assets/images/companies/detail/phone.svg";
 
-const WINDOW_OPTIONS = TREND_WINDOWS.map((label) => ({ value: label, label }));
-
 export default function CompanyDetail() {
+  const { t } = useI18n();
   const detailId = useCompaniesStore((state) => state.detailId);
   const detailOpen = useCompaniesStore((state) => state.detailOpen);
   const companies = useCompaniesStore((state) => state.companies);
@@ -42,6 +42,11 @@ export default function CompanyDetail() {
   const openProfile = useCompaniesStore((state) => state.openProfile);
   const [trendWindow, setTrendWindow] = useState(TREND_WINDOWS[1]);
   const [scoreWindow, setScoreWindow] = useState(TREND_WINDOWS[1]);
+
+  const windowOptions = TREND_WINDOWS.map((value) => ({
+    value,
+    label: t.detail.data.windows[value] ?? value,
+  }));
 
   const company = companies.find((item) => item.id === detailId);
   const owner = company ? ownerByName(company.owner) : null;
@@ -55,17 +60,17 @@ export default function CompanyDetail() {
         <SheetHeader>
           <div className="flex items-center gap-2">
             <BuildingIcon aria-hidden className="text-icon size-3.5" />
-            <SheetTitle>Companies Detail</SheetTitle>
+            <SheetTitle>{t.detail.detail.title}</SheetTitle>
           </div>
           <SheetDescription className="sr-only">
-            Account summary, pipeline health, activity and score cards
+            {t.detail.detail.description}
           </SheetDescription>
           <SheetClose asChild>
             <Button
               variant="ghost"
               size="icon-sm"
               className="-mr-1"
-              aria-label="Close details"
+              aria-label={t.detail.detail.close}
             >
               <XIcon aria-hidden className="text-foreground size-4" />
             </Button>
@@ -75,12 +80,12 @@ export default function CompanyDetail() {
         {company && owner && (
           <ScrollArea className="min-h-0 flex-1">
             <div className="flex items-start gap-3 p-5 shadow-[inset_0_-1px_0_var(--line-strong)]">
-              <span className="bg-muted flex size-[50px] shrink-0 items-center justify-center rounded-[12.5px] shadow-[0px_6.25px_6.25px_0px_rgba(15,15,15,0.24),0px_0px_0px_1.563px_#232323]">
+              <span className="bg-logo-tile flex size-[50px] shrink-0 items-center justify-center rounded-[12.5px] shadow-[0px_6.25px_6.25px_0px_var(--drop),0px_0px_0px_1.563px_var(--border)]">
                 {company.logo ? (
                   <Asset
                     type="image"
                     src={company.logo}
-                    alt={`${company.name} logo`}
+                    alt={t.detail.detail.logoAlt(company.name)}
                     width={1}
                     height={1}
                     fit="contain"
@@ -97,20 +102,20 @@ export default function CompanyDetail() {
                 <div className="flex flex-wrap items-center gap-[3px]">
                   {company.tags.map((tag) => (
                     <Tag key={tag} tone={TAG_TONES[tag]} size="sm">
-                      {tag}
+                      {t.tags[tag]}
                     </Tag>
                   ))}
                 </div>
               </div>
             </div>
 
-            <DetailSection title="Account summary">
+            <DetailSection title={t.detail.detail.accountSummary}>
               <div className="lead-style flex flex-wrap items-center gap-x-4 gap-y-3">
                 <Button
                   variant="ghost"
                   size="none"
                   onClick={() => openProfile(owner.name)}
-                  aria-label={`Open ${owner.name} profile`}
+                  aria-label={t.detail.detail.openProfile(owner.name)}
                   className="lead-style text-foreground -mx-1.5 gap-1.5 px-1.5 py-1 font-medium"
                 >
                   <Avatar src={owner.avatar} alt="" />
@@ -127,16 +132,16 @@ export default function CompanyDetail() {
               </div>
             </DetailSection>
 
-            <DetailSection title="Pipeline health">
+            <DetailSection title={t.detail.detail.pipelineHealth}>
               <PipelineHealth company={company} />
             </DetailSection>
 
             <DetailSection
-              title="Activity trend"
+              title={t.detail.detail.activityTrend}
               action={
                 <FilterMenu
                   value={trendWindow}
-                  options={WINDOW_OPTIONS}
+                  options={windowOptions}
                   onChange={setTrendWindow}
                   align="end"
                 />
@@ -146,21 +151,21 @@ export default function CompanyDetail() {
             </DetailSection>
 
             <DetailSection
-              title="Score card"
+              title={t.detail.detail.scoreCard}
               className="gap-3 shadow-none"
               action={
                 <FilterMenu
                   value={scoreWindow}
-                  options={WINDOW_OPTIONS}
+                  options={windowOptions}
                   onChange={setScoreWindow}
                   align="end"
-                  className="shadow-[0px_4px_4px_0px_rgba(15,15,15,0.24),0px_0px_0px_1px_#393939]"
+                  className="shadow-[0px_4px_4px_0px_var(--drop),0px_0px_0px_1px_var(--line-strong)]"
                 />
               }
             >
               <div className="flex flex-col gap-2">
                 {SCORE_CARDS.map((card, index) => (
-                  <ScoreCard key={`${card.title}-${index}`} card={card} />
+                  <ScoreCard key={`${card.key}-${index}`} card={card} />
                 ))}
               </div>
             </DetailSection>
@@ -169,16 +174,16 @@ export default function CompanyDetail() {
 
         <SheetFooter>
           <Button variant="link" size="none" href="#" className="lead-style">
-            Need help? Ask us.
+            {t.detail.detail.help}
           </Button>
           <div className="flex items-center gap-2">
             <SheetClose asChild>
               <Button variant="subtle" size="sm">
-                Cancel
+                {t.detail.detail.cancel}
               </Button>
             </SheetClose>
             <Button variant="primary" size="sm" onClick={closeDetail}>
-              Save Update
+              {t.detail.detail.save}
             </Button>
           </div>
         </SheetFooter>

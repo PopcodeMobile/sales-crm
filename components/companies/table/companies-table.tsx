@@ -1,6 +1,7 @@
 "use client";
 
 import { useMemo } from "react";
+import { useI18n } from "@/components/_common/preferences-provider";
 import { Checkbox } from "@/components/_ui/checkbox";
 import { ScrollArea } from "@/components/_ui/scroll-area";
 import {
@@ -23,6 +24,7 @@ import { cn } from "@/lib/utils";
 import { useCompaniesStore } from "@/stores/companies-store";
 
 export default function CompaniesTable() {
+  const { t } = useI18n();
   const companies = useCompaniesStore((state) => state.companies);
   const sortBy = useCompaniesStore((state) => state.sortBy);
   const owner = useCompaniesStore((state) => state.owner);
@@ -75,12 +77,12 @@ export default function CompaniesTable() {
                               : false
                         }
                         onCheckedChange={toggleAll}
-                        aria-label="Select all companies"
+                        aria-label={t.companies.table.selectAll}
                       />
-                      {column.label}
+                      {t.companies.table.columns[column.key]}
                     </span>
                   ) : (
-                    column.label
+                    t.companies.table.columns[column.key]
                   )}
                 </TableHead>
               ))}
@@ -104,7 +106,7 @@ export default function CompaniesTable() {
                   role="cell"
                   className="caption-style text-muted-foreground col-span-full flex h-[120px] items-center justify-center"
                 >
-                  No companies match the current filters.
+                  {t.companies.table.empty}
                 </td>
               </TableRow>
             )}

@@ -1,24 +1,34 @@
+"use client";
+
+import { useI18n } from "@/components/_common/preferences-provider";
 import PlusIcon from "@/public/assets/images/_common/plus.svg";
 
 type TableFooterProps = {
   count: number;
 };
 
-const CALCULATIONS = ["Sum of pipeline", "Avg win probality", "Add Calculation"];
-
 export default function TableFooter({ count }: TableFooterProps) {
+  const { t } = useI18n();
+  const calculations = [
+    t.companies.footer.sumPipeline,
+    t.companies.footer.avgWinProbability,
+    t.companies.footer.addCalculation,
+  ];
+
   return (
-    <div className="caption-style grid shrink-0 grid-cols-2 gap-px border-b border-border bg-background p-px sm:grid-cols-4">
-      <div className="flex items-center gap-2 p-3 outline-1 outline-border">
+    <div className="caption-style border-border bg-background grid shrink-0 grid-cols-2 gap-px border-b p-px sm:grid-cols-4">
+      <div className="outline-border flex items-center gap-2 p-3 outline-1">
         <span className="text-foreground">{count}</span>
-        <span className="text-muted-foreground">Companies in view</span>
+        <span className="text-muted-foreground">
+          {t.companies.footer.inView}
+        </span>
       </div>
-      {CALCULATIONS.map((label) => (
+      {calculations.map((label) => (
         <div
           key={label}
-          className="flex items-center gap-2 p-3 text-muted-foreground outline-1 outline-border"
+          className="text-muted-foreground outline-border flex items-center gap-2 p-3 outline-1"
         >
-          <PlusIcon aria-hidden className="size-3 text-muted-foreground" />
+          <PlusIcon aria-hidden className="text-muted-foreground size-3" />
           {label}
         </div>
       ))}

@@ -1,7 +1,10 @@
 import type { Metadata } from "next";
 import { Geist } from "next/font/google";
-import { SITE_DESCRIPTION, SITE_NAME, SITE_URL, pageMetadata } from "@/lib/seo";
+import { SITE_URL, pageMetadata } from "@/lib/seo";
 import ScrollToTop from "@/components/_common/scroll-to-top";
+import { PreferencesProvider } from "@/components/_common/preferences-provider";
+import { getMessages } from "@/lib/i18n/messages";
+import { getPreferences } from "@/lib/i18n/server";
 import { SIDEBAR_WIDTH_SCRIPT } from "@/lib/sidebar";
 import "./globals.css";
 
@@ -10,25 +13,33 @@ const geist = Geist({
   variable: "--font-geist",
 });
 
-export const metadata: Metadata = {
-  metadataBase: new URL(SITE_URL),
-  ...pageMetadata({
-    title: SITE_NAME,
-    description: SITE_DESCRIPTION,
-    path: "/",
-  }),
-};
+export async function generateMetadata(): Promise<Metadata> {
+  const { locale } = await getPreferences();
+  const { meta } = getMessages(locale).app;
 
-export default function RootLayout({
+  return {
+    metadataBase: new URL(SITE_URL),
+    ...pageMetadata({
+      title: meta.title,
+      description: meta.description,
+      path: "/",
+      locale,
+    }),
+  };
+}
+
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const { locale, theme } = await getPreferences();
+
   return (
     <html
-      lang="en"
+      lang={locale}
       data-scroll-behavior="smooth"
-      className={geist.variable}
+      className={`${geist.variable} ${theme}`}
       suppressHydrationWarning
     >
       <head>
@@ -39,8 +50,10 @@ export default function RootLayout({
         />
       </head>
       <body className="relative z-0 font-sans antialiased">
-        <ScrollToTop />
-        {children}
+        <PreferencesProvider initialLocale={locale} initialTheme={theme}>
+          <ScrollToTop />
+          {children}
+        </PreferencesProvider>
       </body>
     </html>
   );

@@ -1,6 +1,7 @@
 "use client";
 
 import { useRef, useState } from "react";
+import { useI18n } from "@/components/_common/preferences-provider";
 import Button from "@/components/_ui/button";
 import CountBadge from "@/components/_ui/count-badge";
 import {
@@ -18,6 +19,8 @@ import BellIcon from "@/public/assets/images/companies/header/bell.svg";
 type Filter = "all" | "unread";
 
 export default function Notifications() {
+  const { t } = useI18n();
+  const copy = t.overlays.notifications;
   const [open, setOpen] = useState(false);
   const [filter, setFilter] = useState<Filter>("all");
   const navigated = useRef(false);
@@ -48,11 +51,7 @@ export default function Notifications() {
         <Button
           variant="secondary"
           size="icon"
-          aria-label={
-            unreadCount > 0
-              ? `Notifications, ${unreadCount} unread`
-              : "Notifications"
-          }
+          aria-label={copy.label(unreadCount)}
           className="data-[state=open]:bg-muted relative"
         >
           <BellIcon aria-hidden className="size-3.5" />
@@ -73,7 +72,7 @@ export default function Notifications() {
       >
         <div className="flex h-14 items-center justify-between gap-2 px-4">
           <div className="flex items-center gap-2">
-            <h2>Notifications</h2>
+            <h2>{copy.title}</h2>
             {unreadCount > 0 && <CountBadge>{unreadCount}</CountBadge>}
           </div>
           <Button
@@ -83,7 +82,7 @@ export default function Notifications() {
             onClick={markAllRead}
             className="-mr-1.5"
           >
-            Mark all as read
+            {copy.markAllRead}
           </Button>
         </div>
 
@@ -93,10 +92,10 @@ export default function Notifications() {
         >
           <TabsList className="border-line-strong border-b px-4">
             <TabsTrigger value="all" className="py-3">
-              All
+              {copy.tabAll}
             </TabsTrigger>
             <TabsTrigger value="unread" className="py-3">
-              Unread
+              {copy.tabUnread}
             </TabsTrigger>
           </TabsList>
         </Tabs>
@@ -121,14 +120,14 @@ export default function Notifications() {
           </ScrollArea>
         ) : (
           <div className="flex flex-col items-center gap-2 px-6 py-12 text-center">
-            <span className="bg-muted flex size-10 items-center justify-center rounded-full shadow-[0px_0px_0px_1px_#232323]">
+            <span className="bg-muted flex size-10 items-center justify-center rounded-full shadow-[0px_0px_0px_1px_var(--border)]">
               <BellIcon aria-hidden className="text-soft size-4" />
             </span>
             <span className="lead-style mt-1 block font-medium">
-              You’re all caught up
+              {copy.emptyTitle}
             </span>
             <span className="caption-style text-subtle block">
-              New mentions and deal updates will show up here.
+              {copy.emptyDescription}
             </span>
           </div>
         )}

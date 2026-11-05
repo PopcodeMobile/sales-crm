@@ -4,19 +4,18 @@ import Avatar from "@/components/_ui/avatar";
 import Button from "@/components/_ui/button";
 import { Tabs, TabsList, TabsTrigger } from "@/components/_ui/tabs";
 import Notifications from "./notifications/notifications";
+import { useI18n } from "@/components/_common/preferences-provider";
+import PreferencesToggles from "@/components/_common/preferences-toggles";
 import { CURRENT_USER } from "@/data/companies";
 import { useCompaniesStore } from "@/stores/companies-store";
 import MenuIcon from "@/public/assets/images/_common/menu.svg";
 import ActiveDot from "@/public/assets/images/companies/header/active-dot.svg";
 import SearchIcon from "@/public/assets/images/_common/search.svg";
 
-const TABS = [
-  { value: "companies", label: "Companies" },
-  { value: "deals", label: "Deals" },
-  { value: "forecast", label: "Forecast" },
-];
+const TAB_VALUES = ["companies", "deals", "forecast"] as const;
 
 export default function CompaniesHeader() {
+  const { t } = useI18n();
   const activeTab = useCompaniesStore((state) => state.activeTab);
   const setActiveTab = useCompaniesStore((state) => state.setActiveTab);
   const setSidebarOpen = useCompaniesStore((state) => state.setSidebarOpen);
@@ -31,23 +30,24 @@ export default function CompaniesHeader() {
             variant="secondary"
             size="icon"
             className="lg:hidden"
-            aria-label="Open navigation"
+            aria-label={t.shell.header.openNavigation}
             onClick={() => setSidebarOpen(true)}
           >
             <MenuIcon aria-hidden className="size-3.5" />
           </Button>
-          <h1 className="truncate">Companies</h1>
-          <span className="caption-style bg-muted inline-flex shrink-0 items-center gap-0.5 rounded-full border border-[#363636] py-[3px] pr-[5px] pl-[3px]">
+          <h1 className="truncate">{t.shell.header.title}</h1>
+          <span className="caption-style bg-muted border-pill-border inline-flex shrink-0 items-center gap-0.5 rounded-full border py-[3px] pr-[5px] pl-[3px]">
             <ActiveDot aria-hidden className="size-3" />
-            Active
+            {t.shell.header.active}
           </span>
         </div>
 
         <div className="flex shrink-0 items-center gap-2">
+          <PreferencesToggles />
           <Button
             variant="secondary"
             size="icon"
-            aria-label="Search"
+            aria-label={t.shell.header.search}
             aria-keyshortcuts="Meta+K Control+K"
             onClick={() => setSearchOpen(true)}
           >
@@ -58,7 +58,7 @@ export default function CompaniesHeader() {
             variant="secondary"
             size="none"
             className="caption-style h-[30px] gap-1.5 py-[5px] pr-[7px] pl-[5px] font-normal"
-            aria-label={`Open profile for ${CURRENT_USER.name}`}
+            aria-label={t.shell.header.openProfile(CURRENT_USER.name)}
             onClick={() => openProfile(CURRENT_USER.name)}
           >
             <Avatar src={CURRENT_USER.avatar} alt="" />
@@ -69,9 +69,9 @@ export default function CompaniesHeader() {
 
       <Tabs value={activeTab} onValueChange={setActiveTab}>
         <TabsList className="border-border border-b px-4">
-          {TABS.map((tab) => (
-            <TabsTrigger key={tab.value} value={tab.value}>
-              {tab.label}
+          {TAB_VALUES.map((value) => (
+            <TabsTrigger key={value} value={value}>
+              {t.shell.header.tabs[value]}
             </TabsTrigger>
           ))}
         </TabsList>

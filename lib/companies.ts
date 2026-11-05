@@ -1,4 +1,6 @@
-import type { Company, SortKey } from "@/data/companies";
+import type { Company, SortKey, Tag } from "@/data/companies";
+import { DEFAULT_LOCALE, type Locale } from "@/lib/i18n/config";
+import { formatNumber, formatShortDate } from "@/lib/i18n/format";
 
 export type CompanyFilters = {
   sortBy: SortKey;
@@ -61,27 +63,24 @@ export function filterCompanies(
   });
 }
 
-export function companiesCsvRows(companies: Company[]) {
+export function companiesCsvRows(
+  companies: Company[],
+  headers: readonly string[],
+  tagLabels: Record<Tag, string>,
+  interactionLabels: Record<string, string>,
+) {
   return [
-    [
-      "Company",
-      "Segment & Stage",
-      "Account Owner",
-      "Open Deals",
-      "Pipeline Value",
-      "Win Probability (%)",
-      "Last Interaction Date",
-      "Last Interaction",
-    ],
+    [...headers],
     ...companies.map((company) => [
       company.name,
-      company.tags.join("; "),
+      company.tags.map((tag) => tagLabels[tag]).join("; "),
       company.owner,
       company.openDeals,
       company.pipelineValue,
       company.winProbability,
       company.lastInteraction.date,
-      company.lastInteraction.label,
+      interactionLabels[company.lastInteraction.label] ??
+        company.lastInteraction.label,
     ]),
   ];
 }
@@ -120,27 +119,12 @@ export function companyActivity(company: Company) {
   };
 }
 
-export function formatDate(iso: string) {
-  const [, month, day] = iso.split("-").map(Number);
-  const names = [
-    "Jan",
-    "Feb",
-    "Mar",
-    "Apr",
-    "May",
-    "Jun",
-    "Jul",
-    "Aug",
-    "Sept",
-    "Oct",
-    "Nov",
-    "Dec",
-  ];
-  return `${names[month - 1]} ${day}`;
+export function formatDate(iso: string, locale: Locale = DEFAULT_LOCALE) {
+  return formatShortDate(iso, locale);
 }
 
-export function formatMoney(value: number) {
-  return value.toLocaleString("en-US");
+export function formatMoney(value: number, locale: Locale = DEFAULT_LOCALE) {
+  return formatNumber(value, locale);
 }
 
 export function daysSince(iso: string) {

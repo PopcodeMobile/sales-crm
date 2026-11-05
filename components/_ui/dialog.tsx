@@ -5,6 +5,7 @@ import { Dialog as DialogPrimitive } from "radix-ui";
 import { cn } from "@/lib/utils";
 import { ScrollArea } from "@/components/_ui/scroll-area";
 import Button from "@/components/_ui/button";
+import { useI18n } from "@/components/_common/preferences-provider";
 import XIcon from "@/public/assets/images/companies/detail/x.svg";
 
 function Dialog(props: ComponentProps<typeof DialogPrimitive.Root>) {
@@ -27,7 +28,7 @@ function DialogOverlay({
     <DialogPrimitive.Overlay
       data-slot="dialog-overlay"
       className={cn(
-        "data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=closed]:ease-power3-in data-[state=open]:animate-in data-[state=open]:fade-in-0 data-[state=open]:ease-power3-out fixed inset-0 z-50 bg-black/60 backdrop-blur-[6px] duration-250 data-[state=closed]:duration-200",
+        "data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=closed]:ease-power3-in data-[state=open]:animate-in data-[state=open]:fade-in-0 data-[state=open]:ease-power3-out fixed inset-0 z-50 bg-(--scrim) backdrop-blur-[6px] duration-250 data-[state=closed]:duration-200",
         className,
       )}
       {...props}
@@ -40,13 +41,15 @@ function DialogContent({
   children,
   ...props
 }: ComponentProps<typeof DialogPrimitive.Content>) {
+  const { t } = useI18n();
+
   return (
     <DialogPrimitive.Portal>
       <DialogOverlay />
       <DialogPrimitive.Content
         data-slot="dialog-content"
         className={cn(
-          "border-line-strong bg-popover text-popover-foreground data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=closed]:zoom-out-95 data-[state=closed]:ease-power3-in data-[state=open]:animate-in data-[state=open]:fade-in-0 data-[state=open]:zoom-in-95 data-[state=open]:ease-power3-out fixed top-1/2 left-1/2 z-50 flex w-[calc(100%-2rem)] max-w-[480px] -translate-x-1/2 -translate-y-1/2 flex-col overflow-hidden rounded-xl border shadow-overlay duration-250 data-[state=closed]:duration-200 outline-none",
+          "border-line-strong bg-popover text-popover-foreground data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=closed]:zoom-out-95 data-[state=closed]:ease-power3-in data-[state=open]:animate-in data-[state=open]:fade-in-0 data-[state=open]:zoom-in-95 data-[state=open]:ease-power3-out shadow-overlay fixed top-1/2 left-1/2 z-50 flex w-[calc(100%-2rem)] max-w-[480px] -translate-x-1/2 -translate-y-1/2 flex-col overflow-hidden rounded-xl border duration-250 outline-none data-[state=closed]:duration-200",
           className,
         )}
         {...props}
@@ -59,7 +62,7 @@ function DialogContent({
             variant="ghost"
             size="icon-sm"
             className="absolute top-4 right-4"
-            aria-label="Close"
+            aria-label={t.shell.ui.close}
           >
             <XIcon className="size-4" />
           </Button>

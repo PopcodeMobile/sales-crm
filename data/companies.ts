@@ -1,4 +1,9 @@
-export const SEGMENTS = ["Enterprise", "Mid-Market", "SMB", "Strategic"] as const;
+export const SEGMENTS = [
+  "Enterprise",
+  "Mid-Market",
+  "SMB",
+  "Strategic",
+] as const;
 
 export const STAGES = [
   "New Logo",
@@ -391,45 +396,36 @@ export type ActivityWindow = (typeof ACTIVITY_WINDOWS)[number];
 
 export const TREND_WINDOWS = ["Last 7 Days", "Last 30 Days", "Last 90 Days"];
 
+export type ScoreCardKey = "businessFit" | "technicalFit";
+
 export type ScoreCard = {
-  title: string;
-  description: string;
+  key: ScoreCardKey;
   reviewer: string;
   reviewerAvatar: string;
-  updated: string;
-  verdict: string;
+  updatedHours: number;
   stars: number;
 };
 
 export const SCORE_CARDS: ScoreCard[] = [
   {
-    title: "Business fit",
-    description:
-      "Evaluates how well the company aligns with our ideal customer profile.",
+    key: "businessFit",
     reviewer: "Emma Green",
     reviewerAvatar: "/assets/images/_common/avatars/detail-2.png",
-    updated: "Updated 2h ago",
-    verdict: "High potential SN",
+    updatedHours: 2,
     stars: 4,
   },
   {
-    title: "Technical fit",
-    description:
-      "Evaluates technical compatibility, security requirements, and integration readiness.",
+    key: "technicalFit",
     reviewer: "Ricky Brown",
     reviewerAvatar: "/assets/images/_common/avatars/detail-3.png",
-    updated: "Updated 2h ago",
-    verdict: "High potential SN",
+    updatedHours: 2,
     stars: 4,
   },
   {
-    title: "Technical fit",
-    description:
-      "Evaluates technical compatibility, security requirements, and integration readiness.",
+    key: "technicalFit",
     reviewer: "Taylor Leroy",
     reviewerAvatar: "/assets/images/_common/avatars/detail-1.png",
-    updated: "Updated 2h ago",
-    verdict: "High potential SN",
+    updatedHours: 2,
     stars: 4,
   },
 ];

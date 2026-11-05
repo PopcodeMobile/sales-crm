@@ -7,6 +7,7 @@ import {
   type ChangeEvent,
   type DragEvent,
 } from "react";
+import { useI18n } from "@/components/_common/preferences-provider";
 import Asset from "@/components/_ui/asset";
 import Button from "@/components/_ui/button";
 import { cn } from "@/lib/utils";
@@ -26,6 +27,8 @@ export default function LogoUpload({
   companyName,
   onChange,
 }: LogoUploadProps) {
+  const { t } = useI18n();
+  const copy = t.overlays.newCompany.logo;
   const inputRef = useRef<HTMLInputElement>(null);
   const hintId = useId();
   const [error, setError] = useState<string | null>(null);
@@ -34,11 +37,11 @@ export default function LogoUpload({
   function readFile(file: File | undefined) {
     if (!file) return;
     if (!ACCEPTED.includes(file.type)) {
-      setError("Use a PNG, JPG, WebP or SVG image.");
+      setError(copy.errorType);
       return;
     }
     if (file.size > MAX_BYTES) {
-      setError("Keep the image under 2 MB.");
+      setError(copy.errorSize);
       return;
     }
     const reader = new FileReader();
@@ -71,14 +74,14 @@ export default function LogoUpload({
       onDragLeave={() => setDragging(false)}
       onDrop={handleDrop}
       data-dragging={dragging}
-      className="ease-power3-out data-[dragging=true]:border-line-strong flex items-center gap-4 rounded-xl border border-dashed border-transparent transition-[border-color,background-color] duration-150 data-[dragging=true]:bg-white/3"
+      className="ease-power3-out data-[dragging=true]:border-line-strong flex items-center gap-4 rounded-xl border border-dashed border-transparent transition-[border-color,background-color] duration-150 data-[dragging=true]:bg-foreground/3"
     >
-      <span className="bg-muted flex size-14 shrink-0 items-center justify-center overflow-hidden rounded-[14px] shadow-[0px_6px_6px_0px_rgba(15,15,15,0.24),0px_0px_0px_1.5px_#232323]">
+      <span className="bg-muted flex size-14 shrink-0 items-center justify-center overflow-hidden rounded-[14px] shadow-[0px_6px_6px_0px_var(--drop),0px_0px_0px_1.5px_var(--border)]">
         {value ? (
           <Asset
             type="image"
             src={value}
-            alt="Company logo preview"
+            alt={copy.preview}
             width={1}
             height={1}
             fit="contain"
@@ -99,7 +102,7 @@ export default function LogoUpload({
             onClick={() => inputRef.current?.click()}
             aria-describedby={hintId}
           >
-            {value ? "Replace logo" : "Upload logo"}
+            {value ? copy.replace : copy.upload}
           </Button>
           {value && (
             <Button
@@ -110,7 +113,7 @@ export default function LogoUpload({
                 onChange(null);
               }}
             >
-              Remove
+              {copy.remove}
             </Button>
           )}
         </div>
@@ -122,8 +125,7 @@ export default function LogoUpload({
             error ? "text-danger" : "text-subtle",
           )}
         >
-          {error ??
-            "PNG, JPG, WebP or SVG up to 2 MB. You can also drop a file here."}
+          {error ?? copy.hint}
         </span>
       </div>
 

@@ -12,6 +12,7 @@ import {
   SheetHeader,
   SheetTitle,
 } from "@/components/_ui/sheet";
+import { useI18n } from "@/components/_common/preferences-provider";
 import DetailSection from "../detail/detail-section";
 import ProfileAccount from "./profile-account";
 import { CURRENT_USER, profileByName } from "@/data/companies";
@@ -23,6 +24,7 @@ import MailIcon from "@/public/assets/images/companies/detail/mail-04.svg";
 import PhoneIcon from "@/public/assets/images/companies/detail/phone.svg";
 
 export default function Profile() {
+  const { t, locale } = useI18n();
   const profileName = useCompaniesStore((state) => state.profileName);
   const profileOpen = useCompaniesStore((state) => state.profileOpen);
   const companies = useCompaniesStore((state) => state.companies);
@@ -38,7 +40,10 @@ export default function Profile() {
         .sort((a, b) => b.pipelineValue - a.pipelineValue)
     : [];
 
-  const openDeals = accounts.reduce((sum, company) => sum + company.openDeals, 0);
+  const openDeals = accounts.reduce(
+    (sum, company) => sum + company.openDeals,
+    0,
+  );
   const pipeline = accounts.reduce(
     (sum, company) => sum + company.pipelineValue,
     0,
@@ -51,10 +56,13 @@ export default function Profile() {
     : 0;
 
   const stats = [
-    { label: "Accounts", value: String(accounts.length) },
-    { label: "Open deals", value: String(openDeals) },
-    { label: "Pipeline", value: `$${formatMoney(pipeline)}` },
-    { label: "Avg. win", value: `${avgWin}%` },
+    { label: t.detail.profile.stats.accounts, value: String(accounts.length) },
+    { label: t.detail.profile.stats.openDeals, value: String(openDeals) },
+    {
+      label: t.detail.profile.stats.pipeline,
+      value: `${t.app.currency} ${formatMoney(pipeline, locale)}`,
+    },
+    { label: t.detail.profile.stats.avgWin, value: `${avgWin}%` },
   ];
 
   function showAccounts() {
@@ -71,17 +79,21 @@ export default function Profile() {
         <SheetHeader>
           <div className="flex items-center gap-2">
             <UsersIcon aria-hidden className="text-icon size-3.5" />
-            <SheetTitle>{isCurrentUser ? "My Profile" : "Owner Profile"}</SheetTitle>
+            <SheetTitle>
+              {isCurrentUser
+                ? t.detail.profile.myProfile
+                : t.detail.profile.ownerProfile}
+            </SheetTitle>
           </div>
           <SheetDescription className="sr-only">
-            Contact details, pipeline summary and assigned accounts
+            {t.detail.profile.description}
           </SheetDescription>
           <SheetClose asChild>
             <Button
               variant="ghost"
               size="icon-sm"
               className="-mr-1"
-              aria-label="Close profile"
+              aria-label={t.detail.profile.close}
             >
               <XIcon aria-hidden className="text-foreground size-4" />
             </Button>
@@ -94,17 +106,17 @@ export default function Profile() {
               <Avatar
                 src={person.avatar}
                 alt=""
-                className="size-[50px] shadow-[0px_6.25px_6.25px_0px_rgba(15,15,15,0.24),0px_0px_0px_1.563px_#232323]"
+                className="size-[50px] shadow-[0px_6.25px_6.25px_0px_var(--drop),0px_0px_0px_1.563px_var(--border)]"
               />
               <div className="flex min-w-0 flex-col gap-2">
                 <h2 className="truncate">{person.name}</h2>
                 <span className="caption-style text-soft block truncate">
-                  {person.role}
+                  {t.detail.data.roles[person.role] ?? person.role}
                 </span>
               </div>
             </div>
 
-            <DetailSection title="Contact">
+            <DetailSection title={t.detail.profile.contact}>
               <div className="lead-style flex flex-wrap items-center gap-x-4 gap-y-3">
                 <a
                   href={`mailto:${person.email}`}
@@ -123,7 +135,13 @@ export default function Profile() {
               </div>
             </DetailSection>
 
-            <DetailSection title={isCurrentUser ? "Team pipeline" : "Pipeline"}>
+            <DetailSection
+              title={
+                isCurrentUser
+                  ? t.detail.profile.teamPipeline
+                  : t.detail.profile.pipeline
+              }
+            >
               <div className="grid grid-cols-2 gap-2">
                 {stats.map((stat) => (
                   <div
@@ -142,7 +160,11 @@ export default function Profile() {
             </DetailSection>
 
             <DetailSection
-              title={isCurrentUser ? "Team accounts" : "Accounts"}
+              title={
+                isCurrentUser
+                  ? t.detail.profile.teamAccounts
+                  : t.detail.profile.accounts
+              }
               className="shadow-none"
             >
               {accounts.length > 0 ? (
@@ -157,7 +179,7 @@ export default function Profile() {
                 </ul>
               ) : (
                 <span className="caption-style text-subtle block">
-                  No accounts assigned yet.
+                  {t.detail.profile.noAccounts}
                 </span>
               )}
             </DetailSection>
@@ -167,7 +189,7 @@ export default function Profile() {
         <SheetFooter>
           <SheetClose asChild>
             <Button variant="subtle" size="sm">
-              Close
+              {t.detail.profile.closeButton}
             </Button>
           </SheetClose>
           <Button
@@ -176,7 +198,9 @@ export default function Profile() {
             onClick={showAccounts}
             disabled={accounts.length === 0}
           >
-            {isCurrentUser ? "Show all accounts" : "Filter table by owner"}
+            {isCurrentUser
+              ? t.detail.profile.showAll
+              : t.detail.profile.filterByOwner}
           </Button>
         </SheetFooter>
       </SheetContent>

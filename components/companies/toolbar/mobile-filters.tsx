@@ -2,6 +2,7 @@
 
 import { useMemo, useState } from "react";
 import Avatar from "@/components/_ui/avatar";
+import { useI18n } from "@/components/_common/preferences-provider";
 import Button from "@/components/_ui/button";
 import CountBadge from "@/components/_ui/count-badge";
 import Field from "@/components/_ui/field";
@@ -23,10 +24,10 @@ import {
   SheetTitle,
 } from "@/components/_ui/sheet";
 import {
-  ACTIVITY_OPTIONS,
-  OWNER_OPTIONS,
-  SORT_MENU_OPTIONS,
-  STAGE_OPTIONS,
+  activityOptions,
+  ownerOptions,
+  sortMenuOptions,
+  stageOptions,
 } from "./filter-options";
 import { ownerByName, type SortKey } from "@/data/companies";
 import {
@@ -44,6 +45,8 @@ type MobileFiltersProps = {
 };
 
 export default function MobileFilters({ className }: MobileFiltersProps) {
+  const { t } = useI18n();
+  const f = t.companies.filters;
   const [open, setOpen] = useState(false);
   const companies = useCompaniesStore((state) => state.companies);
   const sortBy = useCompaniesStore((state) => state.sortBy);
@@ -73,29 +76,27 @@ export default function MobileFilters({ className }: MobileFiltersProps) {
         variant="secondary"
         size="sm"
         onClick={() => setOpen(true)}
-        aria-label={
-          activeCount > 0 ? `Filters, ${activeCount} active` : "Filters"
-        }
+        aria-label={f.triggerLabel(activeCount)}
         className={cn("data-[active=true]:bg-muted", className)}
         data-active={activeCount > 0}
       >
         <FilterIcon aria-hidden className="size-3" />
-        Filters
+        {f.title}
         {activeCount > 0 && <CountBadge>{activeCount}</CountBadge>}
       </Button>
 
       <SheetContent side="bottom">
         <SheetHeader className="px-4">
-          <SheetTitle>Filters</SheetTitle>
+          <SheetTitle>{f.title}</SheetTitle>
           <SheetDescription className="sr-only">
-            Sort and filter the companies table
+            {f.description}
           </SheetDescription>
           <SheetClose asChild>
             <Button
               variant="ghost"
               size="icon-sm"
               className="-mr-1"
-              aria-label="Close filters"
+              aria-label={f.close}
             >
               <XIcon aria-hidden className="text-foreground size-4" />
             </Button>
@@ -104,7 +105,7 @@ export default function MobileFilters({ className }: MobileFiltersProps) {
 
         <ScrollArea viewportClassName="max-h-[calc(85dvh-118px)]">
           <div className="flex flex-col gap-4 p-4">
-            <Field label="Sort by" htmlFor="mobile-sort">
+            <Field label={f.sortBy} htmlFor="mobile-sort">
               <Select
                 value={sortBy}
                 onValueChange={(value) => setSortBy(value as SortKey)}
@@ -113,7 +114,7 @@ export default function MobileFilters({ className }: MobileFiltersProps) {
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
-                  {SORT_MENU_OPTIONS.map((option) => (
+                  {sortMenuOptions(t).map((option) => (
                     <SelectItem key={option.value} value={option.value}>
                       {option.label}
                     </SelectItem>
@@ -122,13 +123,13 @@ export default function MobileFilters({ className }: MobileFiltersProps) {
               </Select>
             </Field>
 
-            <Field label="Account owner" htmlFor="mobile-owner">
+            <Field label={f.accountOwner} htmlFor="mobile-owner">
               <Select value={owner} onValueChange={setOwner}>
                 <SelectTrigger id="mobile-owner">
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
-                  {OWNER_OPTIONS.map((option) => (
+                  {ownerOptions(t).map((option) => (
                     <SelectItem key={option.value} value={option.value}>
                       {option.value === ALL_OWNERS ? (
                         option.label
@@ -147,13 +148,13 @@ export default function MobileFilters({ className }: MobileFiltersProps) {
               </Select>
             </Field>
 
-            <Field label="Stage" htmlFor="mobile-stage">
+            <Field label={f.stage} htmlFor="mobile-stage">
               <Select value={stage} onValueChange={setStage}>
                 <SelectTrigger id="mobile-stage">
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
-                  {STAGE_OPTIONS.map((option) => (
+                  {stageOptions(t).map((option) => (
                     <SelectItem key={option.value} value={option.value}>
                       {option.label}
                     </SelectItem>
@@ -162,7 +163,7 @@ export default function MobileFilters({ className }: MobileFiltersProps) {
               </Select>
             </Field>
 
-            <Field label="Last activity" htmlFor="mobile-activity">
+            <Field label={f.lastActivity} htmlFor="mobile-activity">
               <Select
                 value={String(activityWindow)}
                 onValueChange={(value) => setActivityWindow(Number(value))}
@@ -171,7 +172,7 @@ export default function MobileFilters({ className }: MobileFiltersProps) {
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
-                  {ACTIVITY_OPTIONS.map((option) => (
+                  {activityOptions(t).map((option) => (
                     <SelectItem key={option.value} value={option.value}>
                       {option.label}
                     </SelectItem>
@@ -190,11 +191,11 @@ export default function MobileFilters({ className }: MobileFiltersProps) {
             disabled={activeCount === 0 && sortBy === "pipelineValue"}
             className="-ml-1.5"
           >
-            Reset
+            {f.reset}
           </Button>
           <SheetClose asChild>
             <Button variant="primary" size="sm">
-              Show {resultCount} {resultCount === 1 ? "company" : "companies"}
+              {f.show(resultCount)}
             </Button>
           </SheetClose>
         </SheetFooter>

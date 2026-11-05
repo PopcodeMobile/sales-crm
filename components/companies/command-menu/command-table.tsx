@@ -1,6 +1,7 @@
 "use client";
 
 import { useCommandState } from "cmdk";
+import { useI18n } from "@/components/_common/preferences-provider";
 import Asset from "@/components/_ui/asset";
 import Avatar from "@/components/_ui/avatar";
 import { CommandItem } from "@/components/_ui/command";
@@ -15,15 +16,16 @@ export const COMMAND_TABLE_GRID =
   "grid grid-cols-[minmax(0,1fr)_96px] gap-x-4 md:grid-cols-[minmax(0,1.1fr)_minmax(0,1.4fr)_minmax(0,1fr)_96px] lg:grid-cols-[minmax(0,1.1fr)_minmax(0,1.5fr)_minmax(0,1.1fr)_96px_120px_minmax(0,1fr)]";
 
 const HEADERS = [
-  { label: "Company", className: "" },
-  { label: "Segment & Stage", className: "hidden md:block" },
-  { label: "Account owner", className: "hidden md:block" },
-  { label: "Pipeline", className: "text-right" },
-  { label: "Win probability", className: "hidden text-right lg:block" },
-  { label: "Last interaction", className: "hidden lg:block" },
-];
+  { key: "company", className: "" },
+  { key: "segmentStage", className: "hidden md:block" },
+  { key: "owner", className: "hidden md:block" },
+  { key: "pipeline", className: "text-right" },
+  { key: "winProbability", className: "hidden text-right lg:block" },
+  { key: "lastInteraction", className: "hidden lg:block" },
+] as const;
 
 export function CommandTableHeader() {
+  const { t } = useI18n();
   const count = useCommandState((state) => state.filtered.count);
 
   if (count === 0) return null;
@@ -37,8 +39,8 @@ export function CommandTableHeader() {
       )}
     >
       {HEADERS.map((header) => (
-        <span key={header.label} className={cn("truncate", header.className)}>
-          {header.label}
+        <span key={header.key} className={cn("truncate", header.className)}>
+          {t.overlays.commandMenu.headers[header.key]}
         </span>
       ))}
     </div>
@@ -54,18 +56,24 @@ export function CommandCompanyRow({
   company,
   onSelect,
 }: CommandCompanyRowProps) {
+  const { t, locale } = useI18n();
   const owner = ownerByName(company.owner);
   const { visible, hidden } = splitTags(company.tags);
 
   return (
     <CommandItem
       value={company.id}
-      keywords={[company.name, company.owner, ...company.tags]}
+      keywords={[
+        company.name,
+        company.owner,
+        ...company.tags,
+        ...company.tags.map((tag) => t.tags[tag]),
+      ]}
       onSelect={onSelect}
       className={cn(COMMAND_TABLE_GRID, "text-foreground h-11 gap-x-4")}
     >
       <span className="flex min-w-0 items-center gap-2.5">
-        <span className="bg-muted flex size-6 shrink-0 items-center justify-center rounded-md shadow-[0px_0px_0px_1px_#232323]">
+        <span className="bg-logo-tile flex size-6 shrink-0 items-center justify-center rounded-md shadow-[0px_0px_0px_1px_var(--border)]">
           {company.logo ? (
             <Asset
               type="image"
@@ -88,7 +96,7 @@ export function CommandCompanyRow({
       <span className="hidden min-w-0 items-center gap-[3px] overflow-hidden md:flex">
         {visible.map((tag) => (
           <Tag key={tag} tone={TAG_TONES[tag]} size="sm">
-            {tag}
+            {t.tags[tag]}
           </Tag>
         ))}
         {hidden > 0 && (
@@ -104,8 +112,8 @@ export function CommandCompanyRow({
       </span>
 
       <span className="flex items-center justify-end gap-1 tabular-nums">
-        <span className="text-muted-foreground">$</span>
-        {formatMoney(company.pipelineValue)}
+        <span className="text-muted-foreground">{t.app.currency}</span>
+        {formatMoney(company.pipelineValue, locale)}
       </span>
 
       <span className="hidden items-center justify-end gap-2 tabular-nums lg:flex">
@@ -116,10 +124,13 @@ export function CommandCompanyRow({
       <span className="text-soft hidden min-w-0 items-center gap-1 lg:flex">
         <CalendarIcon aria-hidden className="size-3.5 shrink-0" />
         <span className="shrink-0 tabular-nums">
-          {formatDate(company.lastInteraction.date)}
+          {formatDate(company.lastInteraction.date, locale)}
         </span>
-        <span aria-hidden className="mx-[3px] h-2 w-px shrink-0 bg-white/15" />
-        <span className="truncate">{company.lastInteraction.label}</span>
+        <span aria-hidden className="mx-[3px] h-2 w-px shrink-0 bg-foreground/15" />
+        <span className="truncate">
+          {t.detail.data.interactions[company.lastInteraction.label] ??
+            company.lastInteraction.label}
+        </span>
       </span>
     </CommandItem>
   );

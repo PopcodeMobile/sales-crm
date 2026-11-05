@@ -1,9 +1,10 @@
 import type { Metadata } from "next";
+import { DEFAULT_LOCALE, type Locale } from "@/lib/i18n/config";
 
 export const SITE_NAME = "Sales CRM";
 export const SITE_URL =
   process.env.NEXT_PUBLIC_SITE_URL ?? "https://example.com";
-export const SITE_DESCRIPTION = "Company pipeline for the sales team.";
+export const SITE_DESCRIPTION = "Pipeline de empresas para o time de vendas.";
 export const DEFAULT_OG_IMAGE = "/opengraph-image.jpg";
 
 export function absoluteUrl(path: string) {
@@ -28,7 +29,7 @@ export type SiteRoute = {
 export const SITE_ROUTES: SiteRoute[] = [
   {
     path: "/",
-    title: "Companies",
+    title: "Empresas",
     description: SITE_DESCRIPTION,
     changeFrequency: "weekly",
     priority: 1,
@@ -40,6 +41,7 @@ type PageMetadataOptions = {
   description: string;
   path: string;
   image?: string;
+  locale?: Locale;
 };
 
 export function pageMetadata({
@@ -47,6 +49,7 @@ export function pageMetadata({
   description,
   path,
   image = DEFAULT_OG_IMAGE,
+  locale = DEFAULT_LOCALE,
 }: PageMetadataOptions): Metadata {
   const url = absoluteUrl(path);
 
@@ -55,7 +58,7 @@ export function pageMetadata({
     description,
     alternates: { canonical: url },
     openGraph: {
-      locale: "en",
+      locale: locale.replace("-", "_"),
       type: "website",
       url,
       siteName: SITE_NAME,

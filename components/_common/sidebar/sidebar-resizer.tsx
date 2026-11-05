@@ -14,6 +14,7 @@ import {
   SIDEBAR_WIDTH_VAR,
   clampSidebarWidth,
 } from "@/lib/sidebar";
+import { useI18n } from "@/components/_common/preferences-provider";
 
 const KEYBOARD_STEP = 10;
 
@@ -56,6 +57,7 @@ function subscribe(listener: () => void) {
 }
 
 export default function SidebarResizer() {
+  const { t } = useI18n();
   const width = useSyncExternalStore(
     subscribe,
     readWidth,
@@ -108,7 +110,7 @@ export default function SidebarResizer() {
     <div
       role="separator"
       aria-orientation="vertical"
-      aria-label="Resize sidebar"
+      aria-label={t.shell.sidebar.resize}
       aria-valuemin={SIDEBAR_MIN_WIDTH}
       aria-valuemax={SIDEBAR_MAX_WIDTH}
       aria-valuenow={width}
@@ -123,7 +125,7 @@ export default function SidebarResizer() {
     >
       <span
         aria-hidden
-        className="absolute inset-y-0 left-1/2 w-px -translate-x-1/2 bg-transparent transition-[background-color] duration-150 ease-power3-out group-hover:bg-line-strong group-focus-visible:bg-subtle group-active:bg-subtle"
+        className="ease-power3-out group-hover:bg-line-strong group-focus-visible:bg-subtle group-active:bg-subtle absolute inset-y-0 left-1/2 w-px -translate-x-1/2 bg-transparent transition-[background-color] duration-150"
       />
     </div>
   );

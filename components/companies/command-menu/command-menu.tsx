@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { useI18n } from "@/components/_common/preferences-provider";
 import {
   Command,
   CommandDialog,
@@ -18,6 +19,8 @@ import { useCompaniesStore } from "@/stores/companies-store";
 import PlusIcon from "@/public/assets/images/_common/plus.svg";
 
 export default function CommandMenu() {
+  const { t } = useI18n();
+  const copy = t.overlays.commandMenu;
   const open = useCompaniesStore((state) => state.searchOpen);
   const setOpen = useCompaniesStore((state) => state.setSearchOpen);
   const companies = useCompaniesStore((state) => state.companies);
@@ -53,8 +56,8 @@ export default function CommandMenu() {
     <CommandDialog
       open={open}
       onOpenChange={setOpen}
-      title="Search"
-      description="Search companies by name, owner, segment or stage"
+      title={copy.title}
+      description={copy.description}
       className="max-w-[960px]"
       onCloseAutoFocus={(event) => {
         if (actionRan.current) event.preventDefault();
@@ -66,12 +69,12 @@ export default function CommandMenu() {
         <CommandInput
           value={query}
           onValueChange={setQuery}
-          placeholder="Search companies, owners, stages…"
+          placeholder={copy.placeholder}
           trailing={<Kbd>Esc</Kbd>}
         />
         <CommandTableHeader />
         <CommandList>
-          <CommandEmpty>No results for “{query}”</CommandEmpty>
+          <CommandEmpty>{copy.empty(query)}</CommandEmpty>
           <CommandGroup>
             {companies.map((company) => (
               <CommandCompanyRow
@@ -82,16 +85,16 @@ export default function CommandMenu() {
             ))}
           </CommandGroup>
           <CommandSeparator />
-          <CommandGroup heading="Actions">
+          <CommandGroup heading={copy.actions}>
             <CommandItem
               value="new-company"
-              keywords={["New Company", "Add", "Create"]}
+              keywords={copy.newCompanyKeywords}
               onSelect={() => run(() => setNewCompanyOpen(true))}
             >
-              <span className="bg-muted flex size-6 shrink-0 items-center justify-center rounded-md shadow-[0px_0px_0px_1px_#232323]">
+              <span className="bg-muted flex size-6 shrink-0 items-center justify-center rounded-md shadow-[0px_0px_0px_1px_var(--border)]">
                 <PlusIcon aria-hidden className="text-soft size-3" />
               </span>
-              New Company
+              {copy.newCompany}
             </CommandItem>
           </CommandGroup>
         </CommandList>
@@ -99,11 +102,11 @@ export default function CommandMenu() {
           <span className="flex items-center gap-1.5">
             <Kbd>↑</Kbd>
             <Kbd>↓</Kbd>
-            Navigate
+            {copy.navigate}
           </span>
           <span className="flex items-center gap-1.5">
             <Kbd>↵</Kbd>
-            Open
+            {copy.open}
           </span>
         </CommandFooter>
       </Command>

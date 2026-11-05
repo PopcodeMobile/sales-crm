@@ -1,6 +1,7 @@
 "use client";
 
 import { useRef, useState, type FormEvent } from "react";
+import { useI18n } from "@/components/_common/preferences-provider";
 import Avatar from "@/components/_ui/avatar";
 import Button from "@/components/_ui/button";
 import {
@@ -67,6 +68,8 @@ const EMPTY_FORM: FormState = {
 };
 
 export default function NewCompanyDialog() {
+  const { t } = useI18n();
+  const copy = t.overlays.newCompany;
   const open = useCompaniesStore((state) => state.newCompanyOpen);
   const setOpen = useCompaniesStore((state) => state.setNewCompanyOpen);
   const addCompany = useCompaniesStore((state) => state.addCompany);
@@ -82,7 +85,7 @@ export default function NewCompanyDialog() {
     event.preventDefault();
     const name = form.name.trim();
     if (!name) {
-      setNameError("Enter a company name.");
+      setNameError(copy.nameRequired);
       nameRef.current?.focus();
       return;
     }
@@ -118,13 +121,13 @@ export default function NewCompanyDialog() {
       >
         <form onSubmit={handleSubmit} noValidate className="flex flex-col">
           <DialogHeader>
-            <DialogTitle>New Company</DialogTitle>
+            <DialogTitle>{copy.title}</DialogTitle>
             <DialogDescription>
-              Add a company to the pipeline. It appears in the list right away.
+              {copy.description}
             </DialogDescription>
           </DialogHeader>
 
-          <FormSection title="Company">
+          <FormSection title={copy.sectionCompany}>
             <LogoUpload
               value={form.logo}
               companyName={form.name}
@@ -132,7 +135,7 @@ export default function NewCompanyDialog() {
             />
 
             <Field
-              label="Company name"
+              label={copy.companyName}
               htmlFor="company-name"
               required
               error={nameError ?? undefined}
@@ -145,7 +148,7 @@ export default function NewCompanyDialog() {
                   update("name", event.target.value);
                   if (nameError) setNameError(null);
                 }}
-                placeholder="Acme Inc."
+                placeholder={copy.companyNamePlaceholder}
                 autoComplete="off"
                 aria-invalid={nameError ? true : undefined}
                 aria-describedby={nameError ? "company-name-error" : undefined}
@@ -155,7 +158,7 @@ export default function NewCompanyDialog() {
             </Field>
 
             <div className="grid gap-4 sm:grid-cols-2">
-              <Field label="Segment" htmlFor="company-segment">
+              <Field label={copy.segment} htmlFor="company-segment">
                 <Select
                   value={form.segment}
                   onValueChange={(value) => update("segment", value as Segment)}
@@ -166,13 +169,13 @@ export default function NewCompanyDialog() {
                   <SelectContent>
                     {SEGMENTS.map((segment) => (
                       <SelectItem key={segment} value={segment}>
-                        {segment}
+                        {t.tags[segment]}
                       </SelectItem>
                     ))}
                   </SelectContent>
                 </Select>
               </Field>
-              <Field label="Stage" htmlFor="company-stage">
+              <Field label={copy.stage} htmlFor="company-stage">
                 <Select
                   value={form.stage}
                   onValueChange={(value) => update("stage", value as Stage)}
@@ -183,7 +186,7 @@ export default function NewCompanyDialog() {
                   <SelectContent>
                     {STAGES.map((stage) => (
                       <SelectItem key={stage} value={stage}>
-                        {stage}
+                        {t.tags[stage]}
                       </SelectItem>
                     ))}
                   </SelectContent>
@@ -192,8 +195,8 @@ export default function NewCompanyDialog() {
             </div>
           </FormSection>
 
-          <FormSection title="Ownership & deal">
-            <Field label="Account owner" htmlFor="company-owner">
+          <FormSection title={copy.sectionOwnership}>
+            <Field label={copy.owner} htmlFor="company-owner">
               <Select
                 value={form.owner}
                 onValueChange={(value) => update("owner", value)}
@@ -215,7 +218,7 @@ export default function NewCompanyDialog() {
             </Field>
 
             <div className="grid gap-4 sm:grid-cols-2">
-              <Field label="Pipeline value" htmlFor="company-pipeline">
+              <Field label={copy.pipelineValue} htmlFor="company-pipeline">
                 <div className="relative">
                   <span
                     aria-hidden
@@ -238,7 +241,7 @@ export default function NewCompanyDialog() {
                   />
                 </div>
               </Field>
-              <Field label="Open deals" htmlFor="company-deals">
+              <Field label={copy.openDeals} htmlFor="company-deals">
                 <Input
                   id="company-deals"
                   type="number"
@@ -252,7 +255,7 @@ export default function NewCompanyDialog() {
             </div>
 
             <Field
-              label="Win probability"
+              label={copy.winProbability}
               htmlFor="company-win"
               trailing={
                 <span className="caption-style text-foreground tabular-nums">
@@ -263,7 +266,7 @@ export default function NewCompanyDialog() {
               <div className="flex flex-col gap-3">
                 <Slider
                   id="company-win"
-                  aria-label="Win probability"
+                  aria-label={copy.winProbability}
                   min={0}
                   max={100}
                   step={1}
@@ -273,17 +276,17 @@ export default function NewCompanyDialog() {
                 <SegmentBar
                   percent={form.winProbability}
                   segments={40}
-                  className="h-3 w-full border border-white/4 px-px"
+                  className="h-3 w-full border border-foreground/4 px-px"
                   segmentClassName="h-2"
-                  trackClassName="bg-white/8"
+                  trackClassName="bg-foreground/8"
                 />
               </div>
             </Field>
           </FormSection>
 
-          <FormSection title="Last interaction">
+          <FormSection title={copy.sectionInteraction}>
             <div className="grid gap-4 sm:grid-cols-2">
-              <Field label="Date" htmlFor="company-interaction-date">
+              <Field label={copy.date} htmlFor="company-interaction-date">
                 <Input
                   id="company-interaction-date"
                   type="date"
@@ -295,7 +298,7 @@ export default function NewCompanyDialog() {
                   className="tabular-nums"
                 />
               </Field>
-              <Field label="Type" htmlFor="company-interaction-type">
+              <Field label={copy.type} htmlFor="company-interaction-type">
                 <Select
                   value={form.interactionType}
                   onValueChange={(value) => update("interactionType", value)}
@@ -306,7 +309,7 @@ export default function NewCompanyDialog() {
                   <SelectContent>
                     {INTERACTION_TYPES.map((type) => (
                       <SelectItem key={type} value={type}>
-                        {type}
+                        {t.detail.data.interactions[type] ?? type}
                       </SelectItem>
                     ))}
                   </SelectContent>
@@ -318,12 +321,12 @@ export default function NewCompanyDialog() {
           <DialogFooter>
             <DialogClose asChild>
               <Button variant="subtle" size="sm">
-                Cancel
+                {copy.cancel}
               </Button>
             </DialogClose>
             <Button variant="primary" size="sm" type="submit">
               <PlusIcon aria-hidden className="size-3" />
-              Create Company
+              {copy.create}
             </Button>
           </DialogFooter>
         </form>

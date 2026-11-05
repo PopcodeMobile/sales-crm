@@ -2,6 +2,7 @@
 
 import type { MouseEvent } from "react";
 import Avatar from "@/components/_ui/avatar";
+import { useI18n } from "@/components/_common/preferences-provider";
 import Button from "@/components/_ui/button";
 import { Checkbox } from "@/components/_ui/checkbox";
 import Tag from "@/components/_ui/tag";
@@ -45,6 +46,7 @@ export default function CompanyRow({
   onOpen,
   onOpenOwner,
 }: CompanyRowProps) {
+  const { t, locale } = useI18n();
   const owner = ownerByName(company.owner);
   const { visible, hidden } = splitTags(company.tags);
 
@@ -64,7 +66,7 @@ export default function CompanyRow({
             checked={selected}
             onCheckedChange={onToggle}
             onClick={stop}
-            aria-label={`Select ${company.name}`}
+            aria-label={t.companies.table.select(company.name)}
           />
           {company.name}
         </span>
@@ -73,7 +75,7 @@ export default function CompanyRow({
         <span className="flex items-center gap-[3px]">
           {visible.map((tag) => (
             <Tag key={tag} tone={TAG_TONES[tag]}>
-              {tag}
+              {t.tags[tag]}
             </Tag>
           ))}
           {hidden > 0 && (
@@ -88,7 +90,7 @@ export default function CompanyRow({
           variant="ghost"
           size="none"
           onClick={onOpenOwner}
-          aria-label={`Open ${owner.name} profile`}
+          aria-label={t.companies.table.openProfile(owner.name)}
           className="text-foreground -mx-1.5 gap-1.5 px-1.5 py-1 font-normal"
         >
           <Avatar src={owner.avatar} alt="" />
@@ -100,8 +102,8 @@ export default function CompanyRow({
       </TableCell>
       <TableCell role="cell" className={cellClass("pipelineValue")}>
         <span className="flex items-center gap-1">
-          <span className="text-muted-foreground">$</span>
-          {formatMoney(company.pipelineValue)}
+          <span className="text-muted-foreground">{t.app.currency}</span>
+          {formatMoney(company.pipelineValue, locale)}
         </span>
       </TableCell>
       <TableCell role="cell" className={cellClass("winProbability")}>
@@ -120,18 +122,19 @@ export default function CompanyRow({
             className="text-foreground size-3.5 shrink-0"
           />
           <span className="tabular-nums">
-            {formatDate(company.lastInteraction.date)}
+            {formatDate(company.lastInteraction.date, locale)}
           </span>
-          <span aria-hidden className="mx-[3px] h-2 w-px bg-white/15" />
-          {company.lastInteraction.label}
+          <span aria-hidden className="bg-foreground/15 mx-[3px] h-2 w-px" />
+          {t.detail.data.interactions[company.lastInteraction.label] ??
+            company.lastInteraction.label}
         </span>
       </TableCell>
       <TableCell role="cell" className={cellClass("action")} onClick={stop}>
         <Button
           variant="ghost"
           size="icon-sm"
-          className={cn("text-foreground", active && "bg-white/6")}
-          aria-label={`Open ${company.name} details`}
+          className={cn("text-foreground", active && "bg-foreground/6")}
+          aria-label={t.companies.table.openDetails(company.name)}
           onClick={onOpen}
         >
           <DotsIcon aria-hidden className="size-3" />

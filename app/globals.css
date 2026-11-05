@@ -45,6 +45,16 @@
   --color-trend-muted: var(--trend-muted);
   --color-track: var(--track);
   --color-status: var(--status);
+  --color-chevron: var(--chevron);
+  --color-edge: var(--edge);
+  --color-primary-hover: var(--primary-hover);
+  --color-muted-hover: var(--muted-hover);
+  --color-outline: var(--outline);
+  --color-chip-border: var(--chip-border);
+  --color-pill-border: var(--pill-border);
+  --color-card-hover: var(--card-hover);
+  --color-checkbox: var(--checkbox);
+  --color-logo-tile: var(--logo-tile);
   --radius-sm: calc(var(--radius) - 4px);
   --radius-md: calc(var(--radius) - 2px);
   --radius-lg: var(--radius);
@@ -58,7 +68,7 @@
 }
 
 @theme static {
-  --shadow-overlay: 0px 16px 40px 0px rgba(0, 0, 0, 0.5), 0px 0px 0px 1px #0e0e0e;
+  --shadow-overlay: 0px 16px 40px 0px var(--overlay-drop), 0px 0px 0px 1px var(--edge);
 
   --ease-power1-in: cubic-bezier(0.11, 0, 0.5, 0);
   --ease-power1-out: cubic-bezier(0.5, 1, 0.89, 1);
@@ -121,6 +131,21 @@
   --trend-muted: #395e4d;
   --track: #3a3a3a;
   --status: #16c89e;
+  --chevron: #898b8d;
+  --edge: #0e0e0e;
+  --primary-hover: #4b30ff;
+  --muted-hover: #333333;
+  --outline: #232323;
+  --chip-border: #414141;
+  --pill-border: #363636;
+  --card-hover: #252525;
+  --checkbox: #323232;
+  --checkbox-checked: #ffdb4b;
+  --logo-tile: #2a2a2a;
+  --btn-ring: rgba(0, 0, 0, 0.4);
+  --drop: rgba(42, 42, 42, 0.32);
+  --overlay-drop: rgba(0, 0, 0, 0.5);
+  --scrim: rgba(0, 0, 0, 0.6);
   --sidebar-width: 254px;
   --tag-blue-bg: #1d2b3e;
   --tag-blue-border: #23354c;
@@ -160,6 +185,94 @@
   --padding-section-page: 6rem;
 }
 
+:root.light {
+  color-scheme: light;
+  --background: #fbfbfc;
+  --foreground: #16181d;
+  --card: #ffffff;
+  --card-foreground: #16181d;
+  --popover: #ffffff;
+  --popover-foreground: #16181d;
+  --primary: #4124fb;
+  --primary-foreground: #ffffff;
+  --secondary: #f4f4f5;
+  --secondary-foreground: #16181d;
+  --muted: #ececee;
+  --muted-foreground: #6b6b70;
+  --accent: #ececee;
+  --accent-foreground: #16181d;
+  --destructive: #dc2626;
+  --border: #e6e6e8;
+  --input: #d4d4d8;
+  --ring: #a1a1aa;
+  --sidebar: #f7f7f8;
+  --sidebar-foreground: #6b6b70;
+  --sidebar-primary: #ffffff;
+  --sidebar-primary-foreground: #16181d;
+  --sidebar-accent: #f1f1f3;
+  --sidebar-accent-foreground: #16181d;
+  --sidebar-border: #e6e6e8;
+  --sidebar-ring: #a1a1aa;
+  --line-strong: #d4d4d8;
+  --subtle: #8a8a90;
+  --faint: #c4c4c8;
+  --soft: #52525b;
+  --chip: #3f3f46;
+  --icon: #3f3f46;
+  --success: #16a34a;
+  --warning: #d97706;
+  --danger: #dc2626;
+  --trend: #059669;
+  --trend-muted: #a7dcc4;
+  --track: #e4e4e7;
+  --status: #0d9f7c;
+  --chevron: #8a8a90;
+  --edge: rgba(16, 24, 40, 0.08);
+  --primary-hover: #5236ff;
+  --muted-hover: #e2e2e5;
+  --outline: #f1f1f3;
+  --chip-border: #d4d4d8;
+  --pill-border: #e1e1e4;
+  --card-hover: #f7f7f8;
+  --checkbox: #a1a1aa;
+  --checkbox-checked: #e0a800;
+  --logo-tile: #2a2a2a;
+  --btn-ring: rgba(16, 24, 40, 0.1);
+  --drop: rgba(16, 24, 40, 0.06);
+  --overlay-drop: rgba(16, 24, 40, 0.12);
+  --scrim: rgba(16, 24, 40, 0.3);
+  --tag-blue-bg: #e8f0fd;
+  --tag-blue-border: #c9dbf8;
+  --tag-blue-text: #1d4ed8;
+  --tag-purple-bg: #f0edfd;
+  --tag-purple-border: #d9d2f7;
+  --tag-purple-text: #5b45c9;
+  --tag-green-bg: #e7f7ee;
+  --tag-green-border: #bfe8cf;
+  --tag-green-text: #15803d;
+  --tag-moss-bg: #eaf5e6;
+  --tag-moss-border: #c8e3bf;
+  --tag-moss-text: #3f7a2e;
+  --tag-red-bg: #fdecee;
+  --tag-red-border: #f8cdd2;
+  --tag-red-text: #be123c;
+  --tag-orange-bg: #fdf0e8;
+  --tag-orange-border: #f5d2bd;
+  --tag-orange-text: #c2410c;
+  --tag-amber-bg: #fdf4e7;
+  --tag-amber-border: #f3dbb5;
+  --tag-amber-text: #b45309;
+  --tag-teal-bg: #e6f6f3;
+  --tag-teal-border: #b9e5dc;
+  --tag-teal-text: #0f766e;
+  --tag-yellow-bg: #fdf8e1;
+  --tag-yellow-border: #f0e2a4;
+  --tag-yellow-text: #a16207;
+  --tag-neutral-bg: #f1f1f3;
+  --tag-neutral-border: #e1e1e4;
+  --tag-neutral-text: #3f3f46;
+}
+
 @variant sm {
   :root {
     --padding-global: 2rem;
@@ -192,7 +305,8 @@
   * {
     @apply border-border outline-ring/50;
     scrollbar-width: thin;
-    scrollbar-color: rgb(255 255 255 / 0.2) transparent;
+    scrollbar-color: color-mix(in srgb, var(--foreground) 20%, transparent)
+      transparent;
   }
   body {
     @apply bg-background text-foreground font-normal;

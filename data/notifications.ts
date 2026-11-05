@@ -1,3 +1,5 @@
+import type { Stage } from "./companies";
+
 export type NotificationKind =
   | "mention"
   | "stage"
@@ -5,14 +7,25 @@ export type NotificationKind =
   | "update"
   | "invite";
 
+export type NotificationEvent =
+  | { type: "mention" }
+  | { type: "stage"; stage: Stage }
+  | { type: "winDrop"; percent: number }
+  | { type: "scoreUpdate" }
+  | { type: "demo" }
+  | { type: "pipelineUp"; value: number }
+  | { type: "teamAdd" };
+
+export type NotificationQuote = "pilotReview";
+
 export type Notification = {
   id: string;
   kind: NotificationKind;
   actor?: string;
   companyId: string;
-  message: string;
-  quote?: string;
-  time: string;
+  event: NotificationEvent;
+  quote?: NotificationQuote;
+  minutesAgo: number;
   unread: boolean;
 };
 
@@ -22,10 +35,9 @@ export const NOTIFICATIONS: Notification[] = [
     kind: "mention",
     actor: "Mark Darnalds",
     companyId: "microsoft",
-    message: "mentioned you on Microsoft",
-    quote:
-      "Can you join the pilot review on Friday? Procurement wants a security walkthrough.",
-    time: "2m ago",
+    event: { type: "mention" },
+    quote: "pilotReview",
+    minutesAgo: 2,
     unread: true,
   },
   {
@@ -33,16 +45,16 @@ export const NOTIFICATIONS: Notification[] = [
     kind: "stage",
     actor: "Sarah Nguyen",
     companyId: "lvmh",
-    message: "moved LVMH to Renewal",
-    time: "18m ago",
+    event: { type: "stage", stage: "Renewal" },
+    minutesAgo: 18,
     unread: true,
   },
   {
     id: "n3",
     kind: "alert",
     companyId: "slack",
-    message: "Win probability for Slack dropped to 23%",
-    time: "1h ago",
+    event: { type: "winDrop", percent: 23 },
+    minutesAgo: 60,
     unread: true,
   },
   {
@@ -50,8 +62,8 @@ export const NOTIFICATIONS: Notification[] = [
     kind: "update",
     actor: "Emma Green",
     companyId: "shopify",
-    message: "updated the Business fit score card for Shopify",
-    time: "3h ago",
+    event: { type: "scoreUpdate" },
+    minutesAgo: 180,
     unread: false,
   },
   {
@@ -59,16 +71,16 @@ export const NOTIFICATIONS: Notification[] = [
     kind: "update",
     actor: "Noah Lee",
     companyId: "stripe",
-    message: "logged a demo with Stripe",
-    time: "Yesterday",
+    event: { type: "demo" },
+    minutesAgo: 1440,
     unread: false,
   },
   {
     id: "n6",
     kind: "alert",
     companyId: "snowflake",
-    message: "Pipeline value for Snowflake increased to $520,000",
-    time: "2d ago",
+    event: { type: "pipelineUp", value: 520000 },
+    minutesAgo: 2880,
     unread: false,
   },
   {
@@ -76,8 +88,8 @@ export const NOTIFICATIONS: Notification[] = [
     kind: "invite",
     actor: "Grace Miller",
     companyId: "hubspot",
-    message: "added you to the Hubspot account team",
-    time: "3d ago",
+    event: { type: "teamAdd" },
+    minutesAgo: 4320,
     unread: false,
   },
 ];
