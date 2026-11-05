@@ -5,7 +5,7 @@ const ptBR = {
     title: "Delta CRM",
     description: "Pipeline de empresas para o time de vendas.",
   },
-  currency: "US$",
+  currency: "R$",
   preferences: {
     language: "Idioma",
     switchLanguage: "Mudar idioma para inglês",
@@ -21,7 +21,7 @@ const en: AppMessages = {
     title: "Delta CRM",
     description: "Company pipeline for the sales team.",
   },
-  currency: "$",
+  currency: "R$",
   preferences: {
     language: "Language",
     switchLanguage: "Switch language to Portuguese",
