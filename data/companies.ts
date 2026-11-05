@@ -88,9 +88,9 @@ export const OWNERS: Owner[] = OWNER_NAMES.map((name, i) => ({
 }));
 
 export const CURRENT_USER: Owner = {
-  name: "Jensen Ackles",
+  name: "Gui Junqueira",
   avatar: "/assets/images/_common/avatars/jensen.png",
-  email: "jensen.ackles@crm.com",
+  email: "gui.junqueira@crm.com",
   phone: "+1 (202) 184-5501",
   role: "Head of Sales",
 };
