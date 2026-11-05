@@ -2,7 +2,7 @@ import type { Locale } from "../config";
 
 const ptBR = {
   meta: {
-    title: "Sales CRM",
+    title: "Delta CRM",
     description: "Pipeline de empresas para o time de vendas.",
   },
   currency: "US$",
@@ -18,7 +18,7 @@ export type AppMessages = typeof ptBR;
 
 const en: AppMessages = {
   meta: {
-    title: "Sales CRM",
+    title: "Delta CRM",
     description: "Company pipeline for the sales team.",
   },
   currency: "$",
