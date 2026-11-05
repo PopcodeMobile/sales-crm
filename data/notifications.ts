@@ -33,7 +33,7 @@ export const NOTIFICATIONS: Notification[] = [
   {
     id: "n1",
     kind: "mention",
-    actor: "Mark Darnalds",
+    actor: "Marcos Andrade",
     companyId: "microsoft",
     event: { type: "mention" },
     quote: "pilotReview",
@@ -43,7 +43,7 @@ export const NOTIFICATIONS: Notification[] = [
   {
     id: "n2",
     kind: "stage",
-    actor: "Sarah Nguyen",
+    actor: "Mariana Costa",
     companyId: "lvmh",
     event: { type: "stage", stage: "Renewal" },
     minutesAgo: 18,
@@ -60,7 +60,7 @@ export const NOTIFICATIONS: Notification[] = [
   {
     id: "n4",
     kind: "update",
-    actor: "Emma Green",
+    actor: "Ana Ribeiro",
     companyId: "shopify",
     event: { type: "scoreUpdate" },
     minutesAgo: 180,
@@ -69,7 +69,7 @@ export const NOTIFICATIONS: Notification[] = [
   {
     id: "n5",
     kind: "update",
-    actor: "Noah Lee",
+    actor: "Rodrigo",
     companyId: "stripe",
     event: { type: "demo" },
     minutesAgo: 1440,
@@ -86,7 +86,7 @@ export const NOTIFICATIONS: Notification[] = [
   {
     id: "n7",
     kind: "invite",
-    actor: "Grace Miller",
+    actor: "Vivian Madureira",
     companyId: "hubspot",
     event: { type: "teamAdd" },
     minutesAgo: 4320,
